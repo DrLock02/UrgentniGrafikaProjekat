@@ -1,0 +1,145 @@
+# Blender 4.1.0 MTL File: 'None'
+# www.blender.org
+
+newmtl Bandage_MAT
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Bandage_MAT_baseColor.jpeg
+map_Bump -bm 1.000000 Bandage_MAT_normal.png
+
+newmtl Belt_MAT
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Belt_MAT_baseColor.jpeg
+map_Bump -bm 1.000000 Belt_MAT_normal.png
+
+newmtl Feathers_MAT
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd Feathers_MAT_baseColor.png
+map_d Feathers_MAT_baseColor.png
+map_Bump -bm 1.000000 Feathers_MAT_normal.png
+
+newmtl Gold_MAT
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Gold_MAT_baseColor.jpeg
+map_Bump -bm 1.000000 Gold_MAT_normal.png
+
+newmtl Groin_Plate
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Groin_Plate_baseColor.jpeg
+map_Bump -bm 1.000000 Groin_Plate_normal.png
+
+newmtl Gum_MAT
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Gum_MAT_baseColor.jpeg
+map_Bump -bm 1.000000 Gum_MAT_normal.png
+
+newmtl Metal_MAT
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Metal_MAT_baseColor.jpeg
+map_Bump -bm 1.000000 Metal_MAT_normal.png
+
+newmtl Mouth_MAT1
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Mouth_MAT1_baseColor.jpeg
+map_Bump -bm 1.000000 Mouth_MAT1_normal.png
+
+newmtl Nail_MAT
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Nail_MAT_baseColor.jpeg
+map_Bump -bm 1.000000 Nail_MAT_normal.png
+
+newmtl Shorts_MAT
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Shorts_MAT_baseColor.jpeg
+map_Bump -bm 1.000000 Shorts_MAT_normal.png
+
+newmtl Skin_MAT
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Skin_MAT_baseColor.jpeg
+map_Bump -bm 1.000000 Skin_MAT_normal.png
+
+newmtl Teeth_MAT
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Teeth_MAT_baseColor.jpeg
+map_Bump -bm 1.000000 Teeth_MAT_normal.png
+
+newmtl Wings_MAT
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Wings_MAT_baseColor.jpeg
+map_Bump -bm 1.000000 Wings_MAT_normal.png

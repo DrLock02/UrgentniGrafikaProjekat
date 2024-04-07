@@ -105,7 +105,9 @@ struct ProgramState {
     Camera camera;
     bool CameraMouseMovementUpdateEnabled = true;
     glm::vec3 backpackPosition = glm::vec3(0.0f);
+    glm::vec3 patosPosition = glm::vec3(-0.45f,-0.5f,-0.45f);
     float backpackScale = 1.0f;
+    float patosScale = 10.0f;
     PointLight pointLight;
     ProgramState()
             : camera(glm::vec3(0.0f, 0.0f, 3.0f)) {}
@@ -251,16 +253,20 @@ int main() {
     Model ourModel("resources/objects/MalevolentShrineOBJ/untitled.obj");
     ourModel.SetShaderTextureNamePrefix("material.");
 
+    Model modelPatos("resources/objects/BaseOBJ/model.obj");
+    modelPatos.SetShaderTextureNamePrefix("material.");
 
     // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
     stbi_set_flip_vertically_on_load(true);
+
+
 
     // load models
     // -----------
 
     PointLight& pointLight = programState->pointLight;
     pointLight.position = glm::vec3(4.0f, 4.0, 0.0);
-    pointLight.ambient = glm::vec3(0.1, 0.1, 0.1);
+    pointLight.ambient = glm::vec3(0.5, 0.5, 0.5);
     pointLight.diffuse = glm::vec3(0.6, 0.6, 0.6);
     pointLight.specular = glm::vec3(1.0, 1.0, 1.0);
 
@@ -294,7 +300,7 @@ int main() {
 
         // don't forget to enable shader before setting uniforms
         ourShader.use();
-        pointLight.position = glm::vec3(4.0 * cos(currentFrame), 4.0f, 4.0 * sin(currentFrame));
+        pointLight.position = glm::vec3(4.0, 4.0f, 4.0);
         ourShader.setVec3("pointLight.position", pointLight.position);
         ourShader.setVec3("pointLight.ambient", pointLight.ambient);
         ourShader.setVec3("pointLight.diffuse", pointLight.diffuse);
@@ -318,6 +324,14 @@ int main() {
         model = glm::scale(model, glm::vec3(programState->backpackScale));    // it's a bit too big for our scene, so scale it down
         ourShader.setMat4("model", model);
         ourModel.Draw(ourShader);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, programState->patosPosition);
+        model = glm::rotate(model, glm::radians(10.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(programState->patosScale));
+        ourShader.setMat4("model", model);
+        glCullFace(GL_FRONT);
+        modelPatos.Draw(ourShader);
+        glCullFace(GL_BACK);
         model = glm::mat4(1.0f);
 
         // drawing skybox

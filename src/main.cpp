@@ -106,20 +106,20 @@ struct ProgramState {
     bool CameraMouseMovementUpdateEnabled = true;
     glm::vec3 shrinePosition = glm::vec3(0.0f,0.0f,-8.0f);
     glm::vec3 patosPosition = glm::vec3(-0.45f,-0.5f,-0.45f);
-    glm::vec3 sukunaPosition = glm::vec3(0.0f,-0.32f,-2.0f);
-    glm::vec3 pillarPosition = glm::vec3(-0.45f,-0.5f,-0.45f);
-    glm::vec3 lumberPosition = glm::vec3(0.0f,0.0f,-8.0f);
-    glm::vec3 mahoragaPosition = glm::vec3(-0.45f,-0.5f,-0.45f);
-    glm::vec3 buildingPosition = glm::vec3(0.0f,0.0f,-8.0f);
-    glm::vec3 towerPosition = glm::vec3(-0.45f,-0.5f,-0.45f);
+    glm::vec3 sukunaPosition = glm::vec3(0.0f,-0.39f,-2.0f);
+    glm::vec3 pillarPosition = glm::vec3(-5.0f,-0.5f,5.0f);
+    glm::vec3 lumberPosition = glm::vec3(7.0f,-0.3f,8.0f);
+    glm::vec3 mahoragaPosition = glm::vec3(-0.45f,-0.73f,10.0f);
+    glm::vec3 buildingPosition = glm::vec3(9.0f,-0.71f,-1.3f);
+    glm::vec3 towerPosition = glm::vec3(-9.0f,-0.7f,13.0f);
     float shrineScale = 1.15f;
     float patosScale = 10.0f;
     float sukunaScale = 1.15f;
-    float pillarScale = 1.15f;
-    float lumberScale = 1.15f;
-    float mahoragaScale = 1.15f;
-    float buildingScale = 1.15f;
-    float towerScale = 1.15f;
+    float pillarScale = 0.22f;
+    float lumberScale = 0.22f;
+    float mahoragaScale = 0.17f;
+    float buildingScale = 0.6f;
+    float towerScale = 0.3f;
     PointLight pointLight;
     ProgramState()
             : camera(glm::vec3(0.0f, 0.0f, 3.0f)) {}
@@ -370,6 +370,32 @@ int main() {
         model = glm::scale(model, glm::vec3(programState->sukunaScale));
         ourShader.setMat4("model", model);
         modelSukuna.Draw(ourShader);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, programState->pillarPosition);
+        model = glm::scale(model, glm::vec3(programState->pillarScale));
+        ourShader.setMat4("model", model);
+        modelPillar.Draw(ourShader);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, programState->lumberPosition);
+        model = glm::scale(model, glm::vec3(programState->lumberScale));
+        ourShader.setMat4("model", model);
+        modelLumber.Draw(ourShader);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, programState->towerPosition);
+        model = glm::scale(model, glm::vec3(programState->towerScale));
+        ourShader.setMat4("model", model);
+        modelTower.Draw(ourShader);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, programState->buildingPosition);
+        model = glm::scale(model, glm::vec3(programState->buildingScale));
+        ourShader.setMat4("model", model);
+        modelBuilding.Draw(ourShader);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, programState->mahoragaPosition);
+        model = glm::rotate(model, glm::radians(180.0f),glm::vec3(0.0f,1.0f,0.0f));
+        model = glm::scale(model, glm::vec3(programState->mahoragaScale));
+        ourShader.setMat4("model", model);
+        modelMahoraga.Draw(ourShader);
         model = glm::mat4(1.0f);
 
         // drawing skybox

@@ -256,6 +256,23 @@ int main() {
     Model modelPatos("resources/objects/BaseOBJ/model.obj");
     modelPatos.SetShaderTextureNamePrefix("material.");
 
+    Model modelSukuna("resources/objects/SukunaOBJ/untitled.obj");
+    modelSukuna.SetShaderTextureNamePrefix("material.");
+
+    Model modelPillar("resources/objects/BrokenPillarOBJ/untitled.obj");
+    modelPillar.SetShaderTextureNamePrefix("material.");
+
+    Model modelBuilding("resources/objects/RuinedBuildingOBJ/untitled.obj");
+    modelBuilding.SetShaderTextureNamePrefix("material.");
+
+    Model modelLumber("resources/objects/WasteLumberOBJ/untitled.obj");
+    modelLumber.SetShaderTextureNamePrefix("material.");
+
+    Model modelTower("resources/objects/RuinedTowerOBJ/untitled.obj");
+    modelTower.SetShaderTextureNamePrefix("material.");
+
+    Model modelMahoraga("resources/objects/MahoragaOBJ/untitled.obj");
+    modelMahoraga.SetShaderTextureNamePrefix("material.");
     // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
     stbi_set_flip_vertically_on_load(true);
 
@@ -265,13 +282,13 @@ int main() {
     // -----------
 
     PointLight& pointLight = programState->pointLight;
-    pointLight.position = glm::vec3(4.0f, 4.0, 0.0);
+    pointLight.position = glm::vec3(4.0f, 4.0, -8.0);
     pointLight.ambient = glm::vec3(0.5, 0.5, 0.5);
     pointLight.diffuse = glm::vec3(0.6, 0.6, 0.6);
     pointLight.specular = glm::vec3(1.0, 1.0, 1.0);
 
     pointLight.constant = 1.0f;
-    pointLight.linear = 0.09f;
+    pointLight.linear = 0.0f;
     pointLight.quadratic = 0.032f;
 
 
@@ -300,7 +317,11 @@ int main() {
 
         // don't forget to enable shader before setting uniforms
         ourShader.use();
-        pointLight.position = glm::vec3(4.0, 4.0f, 4.0);
+        ourShader.setVec3("dirlight.direction", glm::vec3(-0.6f,-0.5f,-0.6f));
+        ourShader.setVec3("dirlight.ambient", glm::vec3(0.1f));
+        ourShader.setVec3("dirlight.diffuse", glm::vec3(0.3f));
+        ourShader.setVec3("dirlight.specular", glm::vec3(1.0f));
+        pointLight.position = glm::vec3(1.2, 4.0f, -8.0);
         ourShader.setVec3("pointLight.position", pointLight.position);
         ourShader.setVec3("pointLight.ambient", pointLight.ambient);
         ourShader.setVec3("pointLight.diffuse", pointLight.diffuse);

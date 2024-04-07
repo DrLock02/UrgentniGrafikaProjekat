@@ -106,8 +106,20 @@ struct ProgramState {
     bool CameraMouseMovementUpdateEnabled = true;
     glm::vec3 shrinePosition = glm::vec3(0.0f,0.0f,-8.0f);
     glm::vec3 patosPosition = glm::vec3(-0.45f,-0.5f,-0.45f);
-    float backpackScale = 1.15f;
+    glm::vec3 sukunaPosition = glm::vec3(0.0f,-0.32f,-2.0f);
+    glm::vec3 pillarPosition = glm::vec3(-0.45f,-0.5f,-0.45f);
+    glm::vec3 lumberPosition = glm::vec3(0.0f,0.0f,-8.0f);
+    glm::vec3 mahoragaPosition = glm::vec3(-0.45f,-0.5f,-0.45f);
+    glm::vec3 buildingPosition = glm::vec3(0.0f,0.0f,-8.0f);
+    glm::vec3 towerPosition = glm::vec3(-0.45f,-0.5f,-0.45f);
+    float shrineScale = 1.15f;
     float patosScale = 10.0f;
+    float sukunaScale = 1.15f;
+    float pillarScale = 1.15f;
+    float lumberScale = 1.15f;
+    float mahoragaScale = 1.15f;
+    float buildingScale = 1.15f;
+    float towerScale = 1.15f;
     PointLight pointLight;
     ProgramState()
             : camera(glm::vec3(0.0f, 0.0f, 3.0f)) {}
@@ -342,7 +354,7 @@ int main() {
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model,
                                programState->shrinePosition); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(programState->backpackScale));    // it's a bit too big for our scene, so scale it down
+        model = glm::scale(model, glm::vec3(programState->shrineScale));    // it's a bit too big for our scene, so scale it down
         ourShader.setMat4("model", model);
         ourModel.Draw(ourShader);
         model = glm::mat4(1.0f);
@@ -353,6 +365,11 @@ int main() {
         glCullFace(GL_FRONT);
         modelPatos.Draw(ourShader);
         glCullFace(GL_BACK);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, programState->sukunaPosition);
+        model = glm::scale(model, glm::vec3(programState->sukunaScale));
+        ourShader.setMat4("model", model);
+        modelSukuna.Draw(ourShader);
         model = glm::mat4(1.0f);
 
         // drawing skybox
@@ -454,7 +471,7 @@ void DrawImGui(ProgramState *programState) {
         ImGui::SliderFloat("Float slider", &f, 0.0, 1.0);
         ImGui::ColorEdit3("Background color", (float *) &programState->clearColor);
         ImGui::DragFloat3("Shrine position", (float*)&programState->shrinePosition);
-        ImGui::DragFloat("Backpack scale", &programState->backpackScale, 0.05, 0.1, 4.0);
+        ImGui::DragFloat("Shrine scale", &programState->shrineScale, 0.05, 0.1, 4.0);
 
         ImGui::DragFloat("pointLight.constant", &programState->pointLight.constant, 0.05, 0.0, 1.0);
         ImGui::DragFloat("pointLight.linear", &programState->pointLight.linear, 0.05, 0.0, 1.0);

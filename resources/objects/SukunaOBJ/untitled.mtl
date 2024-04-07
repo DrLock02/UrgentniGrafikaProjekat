@@ -20,6 +20,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.500000
 d 1.000000
 illum 2
+map_Kd Eyes_baseColor.png
 
 newmtl Hair
 Ns 279.590881
@@ -70,7 +71,8 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.500000
 d 1.000000
 illum 2
-map_Bump -bm 1.000000 SukunaBaked_normal.png
+map_Kd SukunaBaked_baseColor.png
+map_bump -bm 1.000000 SukunaBaked_normal.png
 
 newmtl Teeth
 Ns 77.165665

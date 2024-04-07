@@ -104,9 +104,9 @@ struct ProgramState {
     bool ImGuiEnabled = false;
     Camera camera;
     bool CameraMouseMovementUpdateEnabled = true;
-    glm::vec3 backpackPosition = glm::vec3(0.0f);
+    glm::vec3 shrinePosition = glm::vec3(0.0f,0.0f,-8.0f);
     glm::vec3 patosPosition = glm::vec3(-0.45f,-0.5f,-0.45f);
-    float backpackScale = 1.0f;
+    float backpackScale = 1.15f;
     float patosScale = 10.0f;
     PointLight pointLight;
     ProgramState()
@@ -233,12 +233,12 @@ int main() {
     unsigned int cubemapTexture;
         vector<std::string> faces
                 {
-                        "resources/textures/skybox/skybox_px.jpg",
-                        "resources/textures/skybox/skybox_nx.jpg",
-                        "resources/textures/skybox/skybox_py.jpg",
-                        "resources/textures/skybox/skybox_ny.jpg",
-                        "resources/textures/skybox/skybox_pz.jpg",
-                        "resources/textures/skybox/skybox_nz.jpg"
+                        "resources/textures/skybox/left.png",
+                        "resources/textures/skybox/right.png",
+                        "resources/textures/skybox/top.png",
+                        "resources/textures/skybox/bottom.png",
+                        "resources/textures/skybox/back.png",
+                        "resources/textures/skybox/front.png"
                 };
         cubemapTexture = loadCubemap(faces);
 
@@ -320,7 +320,7 @@ int main() {
         // render the loaded model
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model,
-                               programState->backpackPosition); // translate it down so it's at the center of the scene
+                               programState->shrinePosition); // translate it down so it's at the center of the scene
         model = glm::scale(model, glm::vec3(programState->backpackScale));    // it's a bit too big for our scene, so scale it down
         ourShader.setMat4("model", model);
         ourModel.Draw(ourShader);
@@ -432,7 +432,7 @@ void DrawImGui(ProgramState *programState) {
         ImGui::Text("Hello text");
         ImGui::SliderFloat("Float slider", &f, 0.0, 1.0);
         ImGui::ColorEdit3("Background color", (float *) &programState->clearColor);
-        ImGui::DragFloat3("Backpack position", (float*)&programState->backpackPosition);
+        ImGui::DragFloat3("Shrine position", (float*)&programState->shrinePosition);
         ImGui::DragFloat("Backpack scale", &programState->backpackScale, 0.05, 0.1, 4.0);
 
         ImGui::DragFloat("pointLight.constant", &programState->pointLight.constant, 0.05, 0.0, 1.0);
@@ -481,7 +481,7 @@ unsigned int loadCubemap(vector<std::string>& faces){
         if(data) {
             glTexImage2D(
                     GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
-                    0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+                    0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         }else{
             std::cerr << "Failed to load cubemap face at path: " << faces[i] << '\n';
         }

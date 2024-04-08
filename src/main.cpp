@@ -99,6 +99,22 @@ struct PointLight {
     float quadratic;
 };
 
+struct SpotLight {
+    glm::vec3 position;
+    glm::vec3 direction;
+
+    glm::vec3 ambient;
+    glm::vec3 diffuse;
+    glm::vec3 specular;
+
+    float constant;
+    float linear;
+    float quadratic;
+
+    float cutoff;
+    float outer_cutoff;
+};
+
 struct ProgramState {
     glm::vec3 clearColor = glm::vec3(0);
     bool ImGuiEnabled = false;
@@ -120,7 +136,8 @@ struct ProgramState {
     float mahoragaScale = 0.17f;
     float buildingScale = 0.6f;
     float towerScale = 0.3f;
-    PointLight pointLight;
+    SpotLight spotlight1;
+    SpotLight spotlight2;
     ProgramState()
             : camera(glm::vec3(0.0f, 0.0f, 3.0f)) {}
 
@@ -293,17 +310,33 @@ int main() {
     // load models
     // -----------
 
-    PointLight& pointLight = programState->pointLight;
-    pointLight.position = glm::vec3(4.0f, 4.0, -8.0);
-    pointLight.ambient = glm::vec3(0.5, 0.5, 0.5);
-    pointLight.diffuse = glm::vec3(0.6, 0.6, 0.6);
-    pointLight.specular = glm::vec3(1.0, 1.0, 1.0);
+    SpotLight& spotlight1 = programState->spotlight1;
+    spotlight1.position = glm::vec3(0.077f, 27.783f, -5.424f);
+    spotlight1.direction = glm::vec3(0.0f,-1.0f,0.0f);
+    spotlight1.ambient = glm::vec3(0.12, 0.05, 0.05);
+    spotlight1.diffuse = glm::vec3(2.5, 1.0, 1.0);
+    spotlight1.specular = glm::vec3(1.0, 1.0, 1.0);
 
-    pointLight.constant = 1.0f;
-    pointLight.linear = 0.0f;
-    pointLight.quadratic = 0.032f;
+    spotlight1.constant = 1.0f;
+    spotlight1.linear = 0.007f;
+    spotlight1.quadratic = 0.001f;
 
+    spotlight1.cutoff = 7.0f;
+    spotlight1.outer_cutoff = 13.0f;
 
+    SpotLight& spotlight2 = programState->spotlight2;
+    spotlight2.position = glm::vec3(-0.55f, 18.69f, 11.38f);
+    spotlight2.direction = glm::vec3(0.0f,-1.0f,0.0f);
+    spotlight2.ambient = glm::vec3(0.12, 0.05, 0.05);
+    spotlight2.diffuse = glm::vec3(2.47, 2.26, 1.21);
+    spotlight2.specular = glm::vec3(1.0, 1.0, 1.0);
+
+    spotlight2.constant = 1.0f;
+    spotlight2.linear = 0.007f;
+    spotlight2.quadratic = 0.001f;
+
+    spotlight2.cutoff = 7.0f;
+    spotlight2.outer_cutoff = 15.0f;
 
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -333,14 +366,29 @@ int main() {
         ourShader.setVec3("dirlight.ambient", glm::vec3(0.1f));
         ourShader.setVec3("dirlight.diffuse", glm::vec3(0.3f));
         ourShader.setVec3("dirlight.specular", glm::vec3(1.0f));
-        pointLight.position = glm::vec3(1.2, 4.0f, -8.0);
-        ourShader.setVec3("pointLight.position", pointLight.position);
-        ourShader.setVec3("pointLight.ambient", pointLight.ambient);
-        ourShader.setVec3("pointLight.diffuse", pointLight.diffuse);
-        ourShader.setVec3("pointLight.specular", pointLight.specular);
-        ourShader.setFloat("pointLight.constant", pointLight.constant);
-        ourShader.setFloat("pointLight.linear", pointLight.linear);
-        ourShader.setFloat("pointLight.quadratic", pointLight.quadratic);
+
+        ourShader.setVec3("spotlight1.position", spotlight1.position);
+        ourShader.setVec3("spotlight1.direction", spotlight1.direction);
+        ourShader.setVec3("spotlight1.ambient", spotlight1.ambient);
+        ourShader.setVec3("spotlight1.diffuse", spotlight1.diffuse);
+        ourShader.setVec3("spotlight1.specular", spotlight1.specular);
+        ourShader.setFloat("spotlight1.constant", spotlight1.constant);
+        ourShader.setFloat("spotlight1.linear", spotlight1.linear);
+        ourShader.setFloat("spotlight1.quadratic", spotlight1.quadratic);
+        ourShader.setFloat("spotlight1.cutoff", glm::cos(glm::radians(spotlight1.cutoff)));
+        ourShader.setFloat("spotlight1.outer_cutoff", glm::cos(glm::radians(spotlight1.outer_cutoff)));
+
+        ourShader.setVec3("spotlight2.position", spotlight2.position);
+        ourShader.setVec3("spotlight2.direction", spotlight2.direction);
+        ourShader.setVec3("spotlight2.ambient", spotlight2.ambient);
+        ourShader.setVec3("spotlight2.diffuse", spotlight2.diffuse);
+        ourShader.setVec3("spotlight2.specular", spotlight2.specular);
+        ourShader.setFloat("spotlight2.constant", spotlight2.constant);
+        ourShader.setFloat("spotlight2.linear", spotlight2.linear);
+        ourShader.setFloat("spotlight2.quadratic", spotlight2.quadratic);
+        ourShader.setFloat("spotlight2.cutoff", glm::cos(glm::radians(spotlight2.cutoff)));
+        ourShader.setFloat("spotlight2.outer_cutoff", glm::cos(glm::radians(spotlight2.outer_cutoff)));
+
         ourShader.setVec3("viewPosition", programState->camera.Position);
         ourShader.setFloat("material.shininess", 32.0f);
         // view/projection transformations
@@ -499,9 +547,8 @@ void DrawImGui(ProgramState *programState) {
         ImGui::DragFloat3("Shrine position", (float*)&programState->shrinePosition);
         ImGui::DragFloat("Shrine scale", &programState->shrineScale, 0.05, 0.1, 4.0);
 
-        ImGui::DragFloat("pointLight.constant", &programState->pointLight.constant, 0.05, 0.0, 1.0);
-        ImGui::DragFloat("pointLight.linear", &programState->pointLight.linear, 0.05, 0.0, 1.0);
-        ImGui::DragFloat("pointLight.quadratic", &programState->pointLight.quadratic, 0.05, 0.0, 1.0);
+        ImGui::DragFloat("Cutoff", &programState->spotlight1.cutoff, 0.05, 1.0, 20.0);
+        ImGui::DragFloat("Outer Cutoff", &programState->spotlight1.outer_cutoff, 0.05, 1.0, 20.0);
         ImGui::End();
     }
 

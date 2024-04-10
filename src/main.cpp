@@ -122,14 +122,14 @@ struct ProgramState {
     bool CameraMouseMovementUpdateEnabled = true;
     glm::vec3 shrinePosition = glm::vec3(0.0f,0.0f,-8.0f);
     glm::vec3 patosPosition = glm::vec3(-0.45f,-0.5f,-0.45f);
-    glm::vec3 sukunaPosition = glm::vec3(0.0f,-0.39f,-2.0f);
+    glm::vec3 sukunaPosition = glm::vec3(0.0f,-0.5f,-2.0f);
     glm::vec3 pillarPosition = glm::vec3(-5.0f,-0.5f,5.0f);
-    glm::vec3 lumberPosition = glm::vec3(7.0f,-0.3f,8.0f);
-    glm::vec3 mahoragaPosition = glm::vec3(-0.45f,-0.73f,10.0f);
-    glm::vec3 buildingPosition = glm::vec3(9.0f,-0.71f,-1.3f);
-    glm::vec3 towerPosition = glm::vec3(-9.0f,-0.7f,13.0f);
+    glm::vec3 lumberPosition = glm::vec3(7.0f,0.1f,8.0f);
+    glm::vec3 mahoragaPosition = glm::vec3(-0.45f,-0.5f,10.0f);
+    glm::vec3 buildingPosition = glm::vec3(9.0f,-0.5f,-1.3f);
+    glm::vec3 towerPosition = glm::vec3(-9.0f,-0.55f,13.0f);
     float shrineScale = 1.15f;
-    float patosScale = 10.0f;
+    float patosScale = 5.0f;
     float sukunaScale = 1.15f;
     float pillarScale = 0.22f;
     float lumberScale = 0.22f;
@@ -138,6 +138,10 @@ struct ProgramState {
     float towerScale = 0.3f;
     SpotLight spotlight1;
     SpotLight spotlight2;
+
+    float far_plane = 115.5f;
+    float near_plane = 89.0f;
+    float lightPosScale = 1.0f;
     ProgramState()
             : camera(glm::vec3(0.0f, 0.0f, 3.0f)) {}
 
@@ -244,8 +248,32 @@ int main() {
     // -------------------------
     Shader ourShader("resources/shaders/2.model_lighting.vs", "resources/shaders/2.model_lighting.fs");
 
-
     Shader skyboxShader("resources/shaders/Skybox.vs", "resources/shaders/Skybox.fs");
+
+    Shader simpleDepthShader("resources/shaders/shadow_mapping_depth.vs","resources/shaders/shadow_mapping_depth.fs");
+
+    // configure depth map FBO
+    // -----------------------
+    const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+    unsigned int depthMapFBO;
+    glGenFramebuffers(1, &depthMapFBO);
+    // create depth texture
+    unsigned int depthMap;
+    glGenTextures(1, &depthMap);
+    glBindTexture(GL_TEXTURE_2D, depthMap);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+    // attach depth texture as FBO's depth buffer
+    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+    glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     // skybox vertex initialization
 
@@ -277,12 +305,14 @@ int main() {
     ourShader.use();
     ourShader.setInt("material.texture_diffuse1", 0);
     ourShader.setInt("material.texture_specular1", 1);
+    ourShader.setInt("shadowMap", 2);
+
 
 
     Model ourModel("resources/objects/MalevolentShrineOBJ/untitled.obj");
     ourModel.SetShaderTextureNamePrefix("material.");
 
-    Model modelPatos("resources/objects/BaseOBJ/model.obj");
+    Model modelPatos("resources/objects/PatosOBJ/untitled.obj");
     modelPatos.SetShaderTextureNamePrefix("material.");
 
     Model modelSukuna("resources/objects/SukunaOBJ/untitled.obj");
@@ -311,21 +341,21 @@ int main() {
     // -----------
 
     SpotLight& spotlight1 = programState->spotlight1;
-    spotlight1.position = glm::vec3(0.077f, 27.783f, -5.424f);
+    spotlight1.position = glm::vec3(0.077f, 27.783f, -8.0f);
     spotlight1.direction = glm::vec3(0.0f,-1.0f,0.0f);
     spotlight1.ambient = glm::vec3(0.12, 0.05, 0.05);
     spotlight1.diffuse = glm::vec3(2.5, 1.0, 1.0);
     spotlight1.specular = glm::vec3(1.0, 1.0, 1.0);
 
     spotlight1.constant = 1.0f;
-    spotlight1.linear = 0.007f;
+    spotlight1.linear = 0.003f;
     spotlight1.quadratic = 0.001f;
 
     spotlight1.cutoff = 7.0f;
-    spotlight1.outer_cutoff = 13.0f;
+    spotlight1.outer_cutoff = 15.0f;
 
     SpotLight& spotlight2 = programState->spotlight2;
-    spotlight2.position = glm::vec3(-0.55f, 18.69f, 11.38f);
+    spotlight2.position = glm::vec3(-0.3f, 18.69f, 8.9f);
     spotlight2.direction = glm::vec3(0.0f,-1.0f,0.0f);
     spotlight2.ambient = glm::vec3(0.12, 0.05, 0.05);
     spotlight2.diffuse = glm::vec3(2.47, 2.26, 1.21);
@@ -335,8 +365,10 @@ int main() {
     spotlight2.linear = 0.007f;
     spotlight2.quadratic = 0.001f;
 
-    spotlight2.cutoff = 7.0f;
-    spotlight2.outer_cutoff = 15.0f;
+    spotlight2.cutoff = 4.0f;
+    spotlight2.outer_cutoff = 9.0f;
+
+    glm::vec3 lightPos = glm::vec3(-60.0f,-50.0f,-60.0f);
 
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -360,9 +392,77 @@ int main() {
         glClearColor(programState->clearColor.r, programState->clearColor.g, programState->clearColor.b, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        glm::mat4 lightProjection, lightView;
+        glm::mat4 lightSpaceMatrix;
+        float near_plane = programState->near_plane, far_plane = programState->far_plane, lightPosScale = programState->lightPosScale;
+        //lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
+        lightProjection = glm::ortho(-100.0f, 100.0f, -100.0f, 100.0f, near_plane, far_plane);
+        lightView = glm::lookAt(-lightPos*lightPosScale, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+        lightSpaceMatrix = lightProjection * lightView;
+        // render scene from light's point of view
+        simpleDepthShader.use();
+        simpleDepthShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
+
+        glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+        glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+        glClear(GL_DEPTH_BUFFER_BIT);
+
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model,
+                               programState->shrinePosition); // translate it down so it's at the center of the scene
+        model = glm::scale(model, glm::vec3(programState->shrineScale));    // it's a bit too big for our scene, so scale it down
+        simpleDepthShader.setMat4("model", model);
+        ourModel.Draw(simpleDepthShader);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, programState->patosPosition);
+        model = glm::scale(model, glm::vec3(programState->patosScale));
+        simpleDepthShader.setMat4("model", model);
+//        glCullFace(GL_FRONT);
+        modelPatos.Draw(simpleDepthShader);
+//        glCullFace(GL_BACK);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, programState->sukunaPosition);
+        model = glm::scale(model, glm::vec3(programState->sukunaScale));
+        simpleDepthShader.setMat4("model", model);
+        modelSukuna.Draw(simpleDepthShader);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, programState->pillarPosition);
+        model = glm::scale(model, glm::vec3(programState->pillarScale));
+        simpleDepthShader.setMat4("model", model);
+        modelPillar.Draw(simpleDepthShader);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, programState->lumberPosition);
+        model = glm::scale(model, glm::vec3(programState->lumberScale));
+        simpleDepthShader.setMat4("model", model);
+        modelLumber.Draw(simpleDepthShader);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, programState->towerPosition);
+        model = glm::scale(model, glm::vec3(programState->towerScale));
+        simpleDepthShader.setMat4("model", model);
+        modelTower.Draw(simpleDepthShader);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, programState->buildingPosition);
+        model = glm::scale(model, glm::vec3(programState->buildingScale));
+        simpleDepthShader.setMat4("model", model);
+        modelBuilding.Draw(simpleDepthShader);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, programState->mahoragaPosition);
+        model = glm::rotate(model, glm::radians(180.0f),glm::vec3(0.0f,1.0f,0.0f));
+        model = glm::scale(model, glm::vec3(programState->mahoragaScale));
+        simpleDepthShader.setMat4("model", model);
+        modelMahoraga.Draw(simpleDepthShader);
+        model = glm::mat4(1.0f);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        // reset viewport
+        glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
         // don't forget to enable shader before setting uniforms
         ourShader.use();
-        ourShader.setVec3("dirlight.direction", glm::vec3(-0.6f,-0.5f,-0.6f));
+        ourShader.setVec3("dirlight.direction", lightPos);
         ourShader.setVec3("dirlight.ambient", glm::vec3(0.1f));
         ourShader.setVec3("dirlight.diffuse", glm::vec3(0.3f));
         ourShader.setVec3("dirlight.specular", glm::vec3(1.0f));
@@ -391,6 +491,7 @@ int main() {
 
         ourShader.setVec3("viewPosition", programState->camera.Position);
         ourShader.setFloat("material.shininess", 32.0f);
+        ourShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(programState->camera.Zoom),
                                                 (float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f, 100.0f);
@@ -398,8 +499,12 @@ int main() {
         ourShader.setMat4("projection", projection);
         ourShader.setMat4("view", view);
 
+
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, depthMap);
+
         // render the loaded model
-        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::mat4(1.0f);
         model = glm::translate(model,
                                programState->shrinePosition); // translate it down so it's at the center of the scene
         model = glm::scale(model, glm::vec3(programState->shrineScale));    // it's a bit too big for our scene, so scale it down
@@ -407,12 +512,11 @@ int main() {
         ourModel.Draw(ourShader);
         model = glm::mat4(1.0f);
         model = glm::translate(model, programState->patosPosition);
-        model = glm::rotate(model, glm::radians(10.0f), glm::vec3(1.0f, 0.0f, 0.0f));
         model = glm::scale(model, glm::vec3(programState->patosScale));
         ourShader.setMat4("model", model);
-        glCullFace(GL_FRONT);
+//        glCullFace(GL_FRONT);
         modelPatos.Draw(ourShader);
-        glCullFace(GL_BACK);
+//        glCullFace(GL_BACK);
         model = glm::mat4(1.0f);
         model = glm::translate(model, programState->sukunaPosition);
         model = glm::scale(model, glm::vec3(programState->sukunaScale));
@@ -547,7 +651,9 @@ void DrawImGui(ProgramState *programState) {
         ImGui::Begin("Hello window");
         ImGui::Text("Hello text");
         ImGui::SliderFloat("Float slider", &f, 0.0, 1.0);
-        ImGui::ColorEdit3("Background color", (float *) &programState->clearColor);
+        ImGui::DragFloat("Far plane", &programState->far_plane, 0.05, 0.1, 200.0);
+        ImGui::DragFloat("Near plane", &programState->near_plane, 0.05, 0.1, 200.0);
+        ImGui::DragFloat("LightPosScale", &programState->lightPosScale, 0.01, 0.01, 1.0);
         ImGui::DragFloat3("Shrine position", (float*)&programState->shrinePosition);
         ImGui::DragFloat("Shrine scale", &programState->shrineScale, 0.05, 0.1, 4.0);
 

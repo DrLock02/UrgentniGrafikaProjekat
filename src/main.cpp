@@ -220,7 +220,7 @@ int main() {
     }
 
     programState = new ProgramState;
-    programState->LoadFromFile("resources/program_state.txt");
+//    programState->LoadFromFile("resources/program_state.txt");
     if (programState->ImGuiEnabled) {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
@@ -254,7 +254,7 @@ int main() {
 
     // configure depth map FBO
     // -----------------------
-    const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+    const unsigned int SHADOW_WIDTH = 5000, SHADOW_HEIGHT = 5000;
     unsigned int depthMapFBO;
     glGenFramebuffers(1, &depthMapFBO);
     // create depth texture

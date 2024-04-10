@@ -8,7 +8,7 @@ Adaptacija scene borbe između kralja kletvi Rjomena Sukune i Svetog Generala Ma
 2. Point Shadows (Shadow Mapping) -> TBD
 
 # Kontrole
-1. W, S, A, D + mis -> pomeranje kamere
+1. W, A, S, D + mis -> pomeranje kamere
 2. K -> pozicija kamere se spusta
 3. I -> pozicija kamere se podize
 4. F1 -> Ostala podesavanja u ImGUI

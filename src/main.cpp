@@ -194,7 +194,7 @@ int main() {
 
     // glfw window creation
     // --------------------
-    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Domain Expansion: Malevolent Shrine", NULL, NULL);
     if (window == NULL) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -497,6 +497,10 @@ void processInput(GLFWwindow *window) {
         programState->camera.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         programState->camera.ProcessKeyboard(RIGHT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
+        programState->camera.ProcessKeyboard(UPWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
+        programState->camera.ProcessKeyboard(DOWNWARD, deltaTime);
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes

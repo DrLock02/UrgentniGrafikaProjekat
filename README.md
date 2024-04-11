@@ -5,7 +5,7 @@ Adaptacija scene borbe između kralja kletvi Rjomena Sukune i Svetog Generala Ma
 1. Cubemaps (Skybox)
 
 # Implementirane oblasti iz grupe B
-2. Point Shadows (Shadow Mapping) -> TBD
+2. Point Shadows (Shadow Mapping)
 
 # Kontrole
 1. W, A, S, D + mis -> pomeranje kamere

@@ -5,7 +5,7 @@ Adaptacija scene borbe između kralja kletvi Rjomena Sukune i Svetog Generala Ma
 1. Cubemaps (Skybox)
 
 # Implementirane oblasti iz grupe B
-2. Point Shadows (Shadow Mapping) -> TBD
+2. Point Shadows (Shadow Mapping)
 
 # Kontrole
 1. W, A, S, D + mis -> pomeranje kamere
@@ -21,4 +21,4 @@ Adaptacija scene borbe između kralja kletvi Rjomena Sukune i Svetog Generala Ma
 5. Building -> https://sketchfab.com/3d-models/ruined-building-14c79f1a4d8548acb6592072549569ff
 6. Lumber -> https://sketchfab.com/3d-models/waste-construction-lumber-c304473ac1484db7af09c0e516532f01
 7. Tower -> https://sketchfab.com/3d-models/ruined-tower-753a64556e6f4ef8b6335081498b1439
-8. Floor -> https://sketchfab.com/3d-models/bottom-of-a-lake-9e3f926f2e734a3a99ea42869fa9b49e
+8. Floor -> https://sketchfab.com/3d-models/seamless-floor-tiled-texture-iii-d04bab7f22154727ab7b269f7ab84fc2

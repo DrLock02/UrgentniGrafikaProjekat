@@ -143,7 +143,7 @@ struct ProgramState {
     float near_plane = 89.0f;
     float lightPosScale = 1.0f;
     ProgramState()
-            : camera(glm::vec3(0.0f, 0.0f, 3.0f)) {}
+            : camera(glm::vec3(-21.95f, 8.07f, 1.89f)) {}
 
     void SaveToFile(std::string filename);
 
